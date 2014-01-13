@@ -1,0 +1,179 @@
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel='stylesheet' href='http://mottie.github.com/tablesorter/css/theme.blue.css'>
+        <link rel='stylesheet' href='http://mottie.github.com/tablesorter/addons/pager/jquery.tablesorter.pager.css'>
+        <script src='js/libs/underscore.js/underscore-min.js'></script>
+        <script src='js/libs/jquery/jquery.min.js'></script>
+        <script src='js/libs/backbone.js/backbone-min.js'></script>
+        <script src='http://mottie.github.com/tablesorter/js/jquery.tablesorter.min.js'></script>
+        <script src='http://mottie.github.com/tablesorter/addons/pager/jquery.tablesorter.pager.js'></script>
+        <script src='RestClient.js'></script>
+    </head>
+    <body>
+        <div id='create'></div>
+
+        <table id='datatable' class='tablesorter-blue'>
+        </table>
+        <div class='pager' id='pager'>
+            <img src='http://mottie.github.com/tablesorter/addons/pager/icons/first.png' class='first' alt='First'/>
+            <img src='http://mottie.github.com/tablesorter/addons/pager/icons/prev.png' class='prev' alt='Prev'/>
+            <span class='pagedisplay'></span> <!-- this can be any element, including an input -->
+            <img src='http://mottie.github.com/tablesorter/addons/pager/icons/next.png' class='next' alt='Next'/>
+            <img src='http://mottie.github.com/tablesorter/addons/pager/icons/last.png' class='last' alt='Last'/>
+            <select class='pagesize'>
+                <option selected='selected' value='10'>10</option>
+                <option value='20'>20</option>
+                <option value='30'>30</option>
+                <option value='40'>40</option>
+            </select>
+        </div>
+        <br>
+
+        <div id='details'></div>
+
+
+        <!-- Templates -->
+        <script type='text/template' id='tpl-create'>
+            <!--
+            Put your controls to create new entity here.
+
+            Class 'new' is used to listen on events in JS code.
+            -->
+            <button class='new'>Create</button>
+        </script>
+
+        <script type='text/template' id='thead'>
+            <thead>
+            <tr>
+            <th>userId</th>
+            <th>username</th>
+            <th>password</th>
+            <th>admin</th>
+            <th>lastName</th>
+	    <th>firstName</th>
+            <th>middleName</th>
+	    <th>ssn</th>
+            <th>street</th>
+            <th>city</th>
+            <th>states</th>
+            <th>postalCode</th>
+            <th>mobilePhone</th>
+            <th>officePhone</th>
+            <th>homePhone</th>
+            <th>eName</th>
+            <th>relationship</th>
+            <th>ePhone</th>
+            <th>eStreet</th>
+            <th>eCity</th>
+            <th>eStates</th>
+            <th>ePostalCode</th>
+            <th>numberYearsExperience</th>
+            <th>trainingCertificateName</th>
+            </tr>
+            </thead>
+        </script>
+        <script type='text/template' id='tpl-personnel-list-item'>
+            <td><a href='#<%= userId %>'><%= userId %></a></td>
+            <td><%= username %></td>
+            <td><%= password %></td>
+            <td><%= admin %></td>
+            <td><%= lastName %></td>
+ 	    <td><%= firstName %></td>
+	    <td><%= middleName %></td>
+            <td><%= ssn %></td>
+            <td><%= street %></td>
+            <td><%= city %></td>
+            <td><%= states %></td>
+            <td><%= postalCode %></td>
+            <td><%= mobilePhone %></td>
+            <td><%= officePhone %></td>
+            <td><%= homePhone %></td>
+            <td><%= eName %></td>
+            <td><%= relationship %></td>
+            <td><%= ePhone %></td>
+            <td><%= eStreet %></td>
+            <td><%= eCity %></td>
+            <td><%= eStates %></td>
+            <td><%= ePostalCode %></td>
+            <td><%= numberYearsExperience %></td>
+            <td><%= trainingCertificateName %></td>
+
+        </script>
+
+        <script type='text/template' id='tpl-personnel-details'>
+            <div>
+            <table>
+            <tbody>
+            <tr><td>Id</td>
+            <td>
+            <input type='text' id='userId' name='id' value='<%= typeof(userId)!== "undefined" ? userId : "" %>'  />
+            </td>
+            </tr>
+            <tr>
+            <td>username</td><td><input type='text' id='username' name='username' value='<%= username %>'/></td></tr>
+            <tr>
+            <td>password</td><td><input type='text' id='password' name='password' value='<%= password %>'/></td></tr>
+            <tr>
+            <td>admin</td><td><input type='text' id='admin' name='admin' value='<%= admin %>'/></td></tr>
+            <tr>
+            <td>lastName</td><td><input type='text' id='lastName' name='lastName' value='<%= lastName %>'/></td></tr>
+            <tr>
+            <td>firstName</td><td><input type='text' id='firstName' name='firstName' value='<%= firstName %>'/></td></tr>
+            <tr>
+            <td>middleName</td><td><input type='text' id='middleName' name='middleName' value='<%= middleName %>'/></td></tr>
+            <tr>
+            <td>ssn</td><td><input type='text' id='ssn' name='ssn' value='<%= ssn %>'/></td></tr>
+            <tr>
+            <td>street</td><td><input type='text' id='street' name='street' value='<%= street %>'/></td></tr>
+            <tr>
+            <td>city</td><td><input type='text' id='city' name='city' value='<%= city %>'/></td></tr>
+            <tr>
+            <td>states</td><td><input type='text' id='states' name='states' value='<%= states %>'/></td></tr>
+            <tr>
+            <td>postalCode</td><td><input type='text' id='postalCode' name='postalCode' value='<%= postalCode %>'/></td></tr>
+            <tr>
+	    <td>mobilePhone</td><td><input type='text' id='mobilePhone' name='mobilePhone' value='<%= mobilePhone %>'/></td></tr>
+            <tr>
+	    <td>officePhone</td><td><input type='text' id='officePhone' name='officePhone' value='<%= officePhone %>'/></td></tr>
+            <tr>
+            <td>homePhone</td><td><input type='text' id='homePhone' name='homePhone' value='<%= homePhone %>'/></td></tr>
+            <tr>
+            <td>eName</td><td><input type='text' id='eName' name='eName' value='<%= eName %>'/></td></tr>
+            <tr>
+	    <td>relationship</td><td><input type='text' id='relationship' name='relationship' value='<%= relationship %>'/></td></tr>
+            <tr>
+	    <td>ePhone</td><td><input type='text' id='ePhone' name='ePhone' value='<%= ePhone %>'/></td></tr>
+            <tr>
+            <td>eStreet</td><td><input type='text' id='eStreet' name='eStreet' value='<%= eStreet %>'/></td></tr>
+            <tr>
+            <td>eCity</td><td><input type='text' id='eCity' name='eCity' value='<%= eCity %>'/></td></tr>
+            <tr>
+            <td>eStates</td><td><input type='text' id='eStates' name='eStates' value='<%= eStates %>'/></td></tr>
+            <tr>
+            <td>ePostalCode</td><td><input type='text' id='ePostalCode' name='ePostalCode' value='<%= ePostalCode %>'/></td></tr>
+            <tr>
+            <td>numberYearsExperience</td><td><input type='text' id='numberYearsExperience' name='numberYearsExperience' value='<%= numberYearsExperience %>'/></td></tr>
+            <tr>
+            <td>trainingCertificateName</td><td><input type='text' id='trainingCertificateName' name='trainingCertificateName' value='<%= trainingCertificateName %>'/></td></tr>
+            </tbody>
+            </table>
+            <!--
+            Put your controls to create new entity here.
+            Classes 'save' and 'delete' are used to listen on events in JS code.
+            -->
+            <button  class='save'>Save</button>
+            <button  class='delete'>Delete</button>
+            </div>
+        </script>
+
+
+    </body>
+</html>
